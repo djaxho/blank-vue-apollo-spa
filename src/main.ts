@@ -7,12 +7,18 @@ import { DefaultApolloClient } from '@vue/apollo-composable'
 import App from "./App.vue";
 import router from "./router";
 import "./index.css";
+import getOrFetchCsrfToken from "@/utils/getOrFetchCsrfToken";
 
+const token = await getOrFetchCsrfToken();
 // HTTP connection to the API
 const httpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: 'http://localhost/graphql',
-})
+  uri: `${import.meta.env.VITE_API_DOMAIN}${import.meta.env.VITE_API_PATH}`,
+  credentials: "include",
+  headers: {
+    "X-XSRF-TOKEN": token,
+  },
+});
 
 // Cache implementation
 const cache = new InMemoryCache()
