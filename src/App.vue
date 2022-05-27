@@ -1,28 +1,34 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
-import HelloWorld from "@/components/HelloWorld.vue";
+import { useMutation } from "@vue/apollo-composable";
+import gql from "graphql-tag";
+
+const { mutate: sendLogout, onDone } = useMutation(
+  gql`
+    mutation sendLogout {
+      logout {
+        id
+        name
+        email
+        created_at
+        updated_at
+      }
+    }
+  `
+);
+
+onDone((result) => {
+  console.log(result.data);
+});
 </script>
 
 <template>
-  <h1 class="text-3xl font-bold underline bg-amber-400">
-    Hello world!
-  </h1>
-  
   <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="@/assets/logo.svg"
-      width="125"
-      height="125"
-    />
-
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
       <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/login">Login</RouterLink>
+        <a @click="sendLogout">Logout</a>
       </nav>
     </div>
   </header>
